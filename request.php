@@ -1,35 +1,20 @@
 <?php
-$servername = "localhost";
-$username   = "root";
-$password   = "";
-$dbname     = "blood_db";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
+session_start();
+$conn = mysqli_connect("localhost", "root", "", "blood_db");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $patient_name   = $_POST['patientName'];
-    $blood_group    = $_POST['bloodGroup'];
-    $quantity_ml    = $_POST['quantity_ml'];
-    $hospital_name  = $_POST['hospital'];
-    $contact_number = $_POST['contact'];
-    $date           = $_POST['date'];
-    $sql = "INSERT INTO requests (patient_name, blood_group, quantity_ml, hospital_name, contact_number, date,) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssissss", $patient_name, $blood_group, $quantity_ml, $hospital_name, $contact_number, $date, );
-
-    if ($stmt->execute()) {
-    header("Location: requesthistory.php");
-    exit();
-} else {
-    die("Insert failed: " . $stmt->error);
+    $blood_group = $_POST["bloodGroup"];
+    $quantity_ml = $_POST["quantity_ml"];
+    $userID = $_SESSION["userID"];
+    $date = $_POST["date"];
+    $sql = "INSERT INTO request(bloodID,userID,reqDate,ml)VALUES('$blood_group','$userID','$date','$quantity_ml')";
+    if (mysqli_query($conn, $sql)) {
+        header("location: index.php");
+    }
 }
-
-}
-$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -136,30 +121,21 @@ $conn->close();
   <main class="container">
     <h2>Request Blood</h2>
     <form action="Request.php" method="post">
-      <label for="patientName">Patient Name:</label>
-      <input type="text" id="patientName" name="patientName" required>
-
       <label for="bloodGroup">Blood Group:</label>
       <select id="bloodGroup" name="bloodGroup" required>
-        <option value="">--Select--</option>
-        <option value="A+">A+</option>
-        <option value="A-">A-</option>
-        <option value="B+">B+</option>
-        <option value="B-">B-</option>
-        <option value="O+">O+</option>
-        <option value="O-">O-</option>
-        <option value="AB+">AB+</option>
-        <option value="AB-">AB-</option>
+          <?php
+          $sql = "SELECT * FROM blood";
+          $result = mysqli_query($conn, $sql);
+          while ($row = mysqli_fetch_assoc($result)) { ?>
+                 <option value="<?php echo $row["bloodID"]; ?>"><?php echo $row[
+    "bloodType"
+]; ?></option>
+                 <?php }
+          ?>
       </select>
 
       <label for="quantity">Quantity (ml):</label>
   <input type="number" id="quantity" name="quantity_ml" required>
-
-  <label for="hospital">Hospital Name:</label>
-  <input type="text" id="hospital" name="hospital" required>
-
-  <label for="contact">Contact Number:</label>
-  <input type="tel" id="contact" name="contact" required>
 
   <label for="date">Required Date:</label>
   <input type="date" id="date" name="date" required>

@@ -1,23 +1,26 @@
 <?php
-$conn = mysqli_connect("localhost","root","","blood_db");
+$conn = mysqli_connect("localhost", "root", "", "blood_db");
 session_start();
 $login_error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $passwordencrypt = md5($password);
-    $query = "SELECT fullname FROM users where email = '$email' AND password ='$passwordencrypt'";
+    $query = "SELECT userID,fullName,password FROM users where email = '$email'";
     $result = mysqli_query($conn, $query);
 
-  if (mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_array($result);
-    $_SESSION["fullname"]= $row["fullname"];
-    header("location: index.php");
-  }
-  else{
-    $login_error = "Invalid username or password";
-  }
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_array($result);
+        if (password_verify($password, $row["password"])) {
+            $_SESSION["fullname"] = $row["fullName"];
+            $_SESSION["userID"] = $row["userID"];
+            header("location: index.php");
+        } else {
+            $login_error = "Invalid password";
+        }
+    } else {
+        $login_error = "Invalid username or password";
+    }
 }
 ?>
 
@@ -42,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="password" name="password" id="password" placeholder="Password" required>
         <span onclick="togglePassword()" class="toggle-eye">👁️</span>
       </div>
-      
+
       <a href="#" class="forgot">Forgot Password?</a>
       <button type="submit">Sign In</button>
     </form>
