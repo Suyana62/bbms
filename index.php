@@ -120,11 +120,11 @@
         ?>
         <?php } ?>
         <a href="Home.php">Home</a>
-         <a href="Request.php">Request Blood</a>
-        <a href="Donate.php">Donate Blood</a>
+         <a href="request.php">Request Blood</a>
+        <a href="donate.php">Donate Blood</a>
           <a href="Donationhistory.php">Donation History</a>
         <a href="Requesthistory.php">Request History</a>
-        <a href="contact.php">Contact</a>
+        <a href="Contact.php">Contact</a>
     </nav>
 
     <section class="hero">
