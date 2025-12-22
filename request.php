@@ -138,8 +138,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <input type="number" id="quantity" name="quantity_ml" required>
 
   <label for="date">Required Date:</label>
-  <input type="date" id="date" name="date" required>
-
+      <input type='date' id="date" name="date" min="<?php echo date(
+          "Y-m-d",
+      ); ?>" required />
   <button type="submit">Submit Request</button>
 </form>
 

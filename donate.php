@@ -143,7 +143,9 @@ if (isset($_POST["submit"])) {
             </label>
 
             <label>Donation Date
-                <input name="donation_date" type="date" required />
+                <input name="donation_date" type="date" min="<?php echo date(
+                    "Y-m-d",
+                ); ?>" required />
             </label>
 
             <button name="submit" type="submit">search</button>
@@ -156,7 +158,7 @@ if (isset($_POST["submit"])) {
         while ($row = mysqli_fetch_assoc($result)) { ?>
     <div class="request-card" >
         <div class="left-side">
-            <p>fullname: <?php echo $row["fullName"]; ?></p>
+            <p>Fullname: <?php echo $row["fullName"]; ?></p>
             <p>Email: <?php echo $row["email"]; ?></p>
             <p>Phone: <?php echo $row["phone"]; ?></p>
         </div>
