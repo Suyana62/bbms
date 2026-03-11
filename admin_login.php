@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db_connect.php'; // only contains connection
+$conn = new mysqli("localhost", "root", "", "blood_db");
 
 $error = "";
 
@@ -8,11 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    $sql = "SELECT * FROM admin WHERE username = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $sql = "SELECT * FROM admin WHERE email like '$username'";
+    $result=mysqli_query($conn,$sql);
 
     if ($result && $result->num_rows === 1) {
         $admin = $result->fetch_assoc();
@@ -21,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $admin['password'])) {
             $_SESSION['admin_logged_in'] = true;
             $_SESSION['admin_username'] = $admin['username'];
+            $_SESSION['role'] = 'admin';
             header("Location: admin_dashboard.php");
             exit();
         } else {

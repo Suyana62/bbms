@@ -6,9 +6,14 @@ if (!$conn) {
 }
 
 $reqID = $_GET['id'];
-$userID = $_SESSION['userID'];
+$userID = isset($_SESSION['userID']) ? $_SESSION['userID'] : null;
+$isAdmin = isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
 
-$sql = "SELECT * FROM request WHERE reqID = '$reqID' AND userID = '$userID'";
+if ($isAdmin) {
+    $sql = "SELECT * FROM request WHERE reqID = '$reqID'";
+} else {
+    $sql = "SELECT * FROM request WHERE reqID = '$reqID' AND userID = '$userID'";
+}
 $result = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($result) == 0) {
@@ -25,7 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $updateSql = "UPDATE request SET bloodID='$blood_group', reqDate='$date', ml='$quantity_ml' WHERE reqID='$reqID'";
     if (mysqli_query($conn, $updateSql)) {
-        header("Location: requests.php");
+        if ($isAdmin) {
+            header("Location: admin_dashboard.php");
+        } else {
+            header("Location: requests.php");
+        }
         exit();
     }
 }

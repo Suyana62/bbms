@@ -25,8 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_req_id'])) {
     }
 }
 
-$userID = $_SESSION['userID'];
-$role = $_SESSION['role'];
+$userID = isset($_SESSION['userID']) ? $_SESSION['userID'] : null;
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
 
 if ($role == 'donor') {
     $requestQuery = "SELECT request.reqID, request.userID, blood.bloodType, users.FullName, request.reqDate, request.ml, users.phone 
@@ -77,19 +77,19 @@ $acceptedResult = mysqli_query($conn, $acceptedQuery);
 <body>
     <a href="index.php" class="home-btn">Home</a>
     <h2>Requests</h2>
-    <?php if ($_SESSION['role'] == 'requester'): ?>
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'requester'): ?>
     <a href="request.php" class="request-btn">Request Blood</a>
     <?php endif; ?>
     <h3 style="margin-top: 30px; color: #b30000;">Pending Requests</h3>
     <table>
         <tr>
-            <?php if ($_SESSION['role'] == 'donor'): ?>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'donor'): ?>
             <th>Requester</th>
             <?php endif; ?>
             <th>Blood Group</th>
             <th>Date</th>
             <th>Quantity (ml)</th>
-            <?php if ($_SESSION['role'] == 'donor'): ?>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'donor'): ?>
             <th>Contact Number</th>
             <?php endif; ?>
             <th>action</th>
@@ -126,7 +126,7 @@ $acceptedResult = mysqli_query($conn, $acceptedQuery);
                     <?php } ?>
                 </tr>
         <?php } } else { ?>
-            <tr><td colspan="<?php echo ($_SESSION['role'] == 'donor') ? 6 : 4; ?>">No pending requests</td></tr>
+            <tr><td colspan="<?php echo ($role == 'donor') ? 6 : 4; ?>">No pending requests</td></tr>
         <?php } ?>
     </table>
 
