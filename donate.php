@@ -107,7 +107,7 @@ if (isset($_POST["submit"])) {
         p{
             font-weight:600;
             color:#333;
-            text-size:12px;
+            font-size:12px;
             font-family:Arial, Helvetica, sans-serif;
         }
         .left-side{

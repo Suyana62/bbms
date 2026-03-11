@@ -6,7 +6,7 @@ $login_error = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $query = "SELECT userID,fullName,password FROM users where email = '$email'";
+    $query = "SELECT userID,fullName,password,role FROM users where email = '$email'";
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) > 0) {
@@ -14,6 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $row["password"])) {
             $_SESSION["fullname"] = $row["fullName"];
             $_SESSION["userID"] = $row["userID"];
+            $_SESSION["role"]= $row["role"];
             header("location: index.php");
         } else {
             $login_error = "Invalid password";

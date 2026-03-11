@@ -15,13 +15,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone = trim($_POST["phone"]);
     $password = $_POST["password"];
     $bloodID = $_POST["bloodgroup"];
+    $role = $_POST["role"];
 
     // Hash password securely
     $passwordencrypt = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepared statement to prevent SQL injection
-    $sql = "INSERT INTO users (fullName, email, phone, password, bloodID)
-             VALUES ('$fullname', '$email', '$phone', '$passwordencrypt', '$bloodID')";
+    $sql = "INSERT INTO users (fullName, email, phone, password, bloodID,role)
+             VALUES ('$fullname', '$email', '$phone', '$passwordencrypt', '$bloodID','$role')";
     if (mysqli_query($conn, $sql)) {
         $_SESSION["fullname"] = $fullname;
         header("location: index.php");
@@ -52,6 +53,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <input type="text" name="fullname" id="fullname" placeholder="Full Name" required>
       <p class="error" id="errorEmail" ></p>
       <input type="email" name="email" id="email" placeholder="Email Address" required>
+      <select name="role" id="role">
+        <option value="requester">requester</option>
+        <option value="donor">donor</option>
+      </select>
       <p class="error" id="errorPhone" ></p>
       <input type="text" name="phone" id="phone" placeholder="Phone Number" required>
       <p class="error" id="errorPassword" ></p>

@@ -35,7 +35,8 @@
             background-color: #ff3333; /* Bright Red */
             display: flex;
             justify-content: center;
-            padding: 10px;
+            align-items: center;
+            height: 2rem;
         }
 .user{
     color: white;
@@ -48,8 +49,15 @@
             font-weight: bold;
             transition: 0.3s;
         }
+        nav button a{
+            color: black;
+        }
 
-        nav a:hover {
+        nav button{
+            border-width: 0;
+        }
+
+        nav a:hover,nav button {
             color: #000;
             background-color: #fff;
             padding: 5px 10px;
@@ -111,6 +119,17 @@
     </header>
 
     <nav>
+        <?php
+        if(isset($_SESSION['role'])){
+        if($_SESSION['role']=='donor'){
+        ?>
+        <a href="donate.php">Donate Blood</a>
+    <?php }else { ?>
+         <a href="request.php">Request Blood</a>
+    <?php }}?>
+          <a href="Donationhistory.php">Donation History</a>
+        <a href="Requesthistory.php">Request History</a>
+        <a href="Contact.php">Contact</a>
         <?php 
        if(isset($_SESSION['fullname'])) {
         echo "<strong class='user' >".$_SESSION['fullname']."</strong>";
@@ -118,13 +137,11 @@
         <a href="logout.php">Logout</a>
        <?php }else{
         ?>
+        <button>
+        <a href="login.php">login
+        </a>
+        </button>
         <?php } ?>
-        <a href="Home.php">Home</a>
-         <a href="request.php">Request Blood</a>
-        <a href="donate.php">Donate Blood</a>
-          <a href="Donationhistory.php">Donation History</a>
-        <a href="Requesthistory.php">Request History</a>
-        <a href="Contact.php">Contact</a>
     </nav>
 
     <section class="hero">
