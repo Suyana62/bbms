@@ -1,35 +1,22 @@
 <?php
-// db_connect.php
-$servername = "localhost";
-$username   = "Suyana_Kandel";   
-$password   = "suyana123";
-$dbname     = "blood_db";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$conn = mysqli_connect("localhost", "root", "", "blood_db");
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
-// Fetch Donation History
-$donationQuery  = "SELECT donor_name, blood_group, date, quantity_ml,location,email,phone FROM donations ORDER BY date DESC LIMIT 10";
-$donationResult = $conn->query($donationQuery);
+$donationQuery = "SELECT donor_name, blood_group, date, quantity_ml, location, email, phone FROM donations ORDER BY date DESC LIMIT 10";
+$donationResult = mysqli_query($conn, $donationQuery);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Donation History</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
-        h2 { color: #b30000; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #fff; }
-        th, td { padding: 12px; text-align: center; border-bottom: 1px solid #ddd; }
-        th { background: #b30000; color: #fff; }
-        tr:hover { background-color: #f2f2f2; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="./public/css/Donationhistory.css">
 </head>
 <body>
-    <h2>💉 Donation History</h2>
+    <a href="index.php" class="home-btn">Home</a>
+    <h2>Donation History</h2>
     <table>
         <tr>
             <th>Donor Name</th>
@@ -40,35 +27,21 @@ $donationResult = $conn->query($donationQuery);
             <th>email</th>
             <th>phone</th>
         </tr>
-        <?php if ($donationResult->num_rows > 0) {
-            while($row = $donationResult->fetch_assoc()) { ?>
+        <?php if ($donationResult && mysqli_num_rows($donationResult) > 0) {
+            while($row = mysqli_fetch_assoc($donationResult)) { ?>
                 <tr>
-                    <td><?php echo $row['donor_name']; ?></td>
-                    <td><?php echo $row['blood_group']; ?></td>
-                    <td><?php echo $row['date']; ?></td>
-                    <td><?php echo $row['quantity_ml']; ?></td>
-                     <td><?php echo $row['location']; ?></td>
-                      <td><?php echo $row['email']; ?></td>
-                       <td><?php echo $row['phone']; ?></td>
+                    <td><?php echo htmlspecialchars($row['donor_name']); ?></td>
+                    <td><?php echo htmlspecialchars($row['blood_group']); ?></td>
+                    <td><?php echo htmlspecialchars($row['date']); ?></td>
+                    <td><?php echo htmlspecialchars($row['quantity_ml']); ?></td>
+                    <td><?php echo htmlspecialchars($row['location']); ?></td>
+                    <td><?php echo htmlspecialchars($row['email']); ?></td>
+                    <td><?php echo htmlspecialchars($row['phone']); ?></td>
                 </tr>
         <?php } } else { ?>
-            <tr><td colspan="4">No donations found</td></tr>
+            <tr><td colspan="7">No donations found</td></tr>
         <?php } ?>
-    </table><?php
-// db_connect.php
-$servername = "localhost";
-$username   = "Suyana_Kandel";   
-$password   = "suyana123";
-$dbname     = "blood_db";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch Donation History (added hospital_name and contact_number)
-$donationQuery  = "SELECT donor_name, blood_group, date, quantity_ml, location, email, phone
-                   FROM donations 
-                   ORDER BY date DESC 
-                   LIMIT 10";
-$donationResult = $conn->query($donationQuery);
+    </table>
+</body>
+</html>
+<?php mysqli_close($conn); ?>

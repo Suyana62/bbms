@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <link rel="stylesheet" type="text/css" href="./public/login.css">
 </head>
 <body>
+  <a href="index.php" class="home-btn">Home</a>
   <div class="login-box">
     <img src="image/logo.png" alt="Blood Bank Logo" class="logo">
     <h2>BLOOD BANK MANAGEMENT SYSTEM</h2>
@@ -52,11 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p class="signup">New staff? <a href="register.php">Create Account</a></p>
   </div>
 
-  <script>
-    function togglePassword() {
-      const pwd = document.getElementById("password");
-      pwd.type = pwd.type === "password" ? "text" : "password";
-    }
-  </script>
+  <script src="./public/js/login.js"></script>
 </body>
 </html>

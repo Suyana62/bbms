@@ -41,88 +41,10 @@ if (isset($_POST["submit"])) {
 <head>
     <meta charset="UTF-8" />
     <title>Donate Blood - Blood Bank</title>
-    <style>
-        .donate-box {
-            background: #fff;
-            margin: 50px auto;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-        h2 {
-            text-align: center;
-            color: #b30000;
-            margin-bottom: 20px;
-        }
-        .donate-box form {
-            display: flex;
-        }
-        .donate-box label {
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-        .donate-box input, .donate-box select {
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .donate-box button {
-            margin-top: 15px;
-            padding: 12px;
-            background: #b30000;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .donate-box button:hover {
-            background: #800000;
-        }
-        .request-box {
-            margin: 30px auto;
-            width: 80%;
-            max-width: 800px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .request-card {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .left-side, .right-side {
-            display: flex;
-            gap: 10px;
-            flex-direction: column;
-        }
-        p{
-            font-weight:600;
-            color:#333;
-            font-size:12px;
-            font-family:Arial, Helvetica, sans-serif;
-        }
-        .left-side{
-            flex-grow: 1;
-            justify-content: flex-start;
-        }
-        .left-side *{
-            margin-right: 15px;
-        }
-        .right-side{
-            width: 200px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="./public/css/donate.css">
 </head>
 <body>
+    <a href="index.php" class="home-btn">Home</a>
     <div class="donate-box">
         <h2>Donate Blood</h2>
         <form action="" method="post">

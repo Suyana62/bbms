@@ -25,6 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              VALUES ('$fullname', '$email', '$phone', '$passwordencrypt', '$bloodID','$role')";
     if (mysqli_query($conn, $sql)) {
         $_SESSION["fullname"] = $fullname;
+        $_SESSION["role"] = $role;
+        $_SESSION["userID"] = mysqli_insert_id($conn);
         header("location: index.php");
     } else {
         $register_message = "Error: " . mysqli_error($conn);
@@ -39,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <link rel="stylesheet" type="text/css" href="./public/register.css"/>
 </head>
 <body>
+  <a href="index.php" class="home-btn">Home</a>
   <div class="login-box">
     <img src="image/logo.png" alt="Blood Bank Logo" class="logo">
     <h2>REGISTER ACCOUNT</h2>

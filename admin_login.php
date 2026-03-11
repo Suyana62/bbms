@@ -36,70 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
   <meta charset="UTF-8">
   <title>Blood Bank Management System</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #b30000; /* blood red */
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-    }
-    .container {
-      width: 80%;
-      max-width: 400px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      color: #b30000;
-    }
-    form input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 12px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    form input:focus {
-      border: 1px solid #b30000;
-      outline: none;
-    }
-    form button {
-      margin-top: 20px;
-      background: #b30000;
-      color: #fff;
-      padding: 12px 18px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
-      width: 100%;
-    }
-    form button:hover {
-      background: #800000;
-    }
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="./public/css/admin_login.css">
 </head>
 <body>
   <header>
+    <a href="index.php" class="home-btn">Home</a>
     <img src="image/logo.png" alt="" 
          style="height:40px; vertical-align:middle; margin-right:10px;">
     <h1 style="display:inline; vertical-align:middle;">Blood Bank Management System</h1>
