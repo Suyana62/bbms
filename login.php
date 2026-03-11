@@ -47,7 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <span onclick="togglePassword()" class="toggle-eye">👁️</span>
       </div>
 
-      <a href="#" class="forgot">Forgot Password?</a>
       <button type="submit">Sign In</button>
     </form>
     <p class="signup">New staff? <a href="register.php">Create Account</a></p>
