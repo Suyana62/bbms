@@ -14,6 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_req_id'])) {
     header("Location: admin_dashboard.php");
     exit();
 }
+
+$totalDonors = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role = 'donor'"))['count'];
+$totalRequesters = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role = 'requester'"))['count'];
+$totalRequests = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM request"))['count'];
+$pendingRequests = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM request WHERE reqID NOT IN (SELECT reqID FROM donors)"))['count'];
+$fulfilledRequests = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM donors WHERE isDonated = 1"))['count'];
+$acceptedRequests = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM donors WHERE isDonated = 0"))['count'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,21 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_req_id'])) {
 </head>
 <body>
 <header>
-  <h1>Blood Bank Management System - Admin Dashboard</h1>
-  <nav>
-    <a href="#">Donors</a>
-    <a href="#">Requests</a>
-    <a href="logout.php">Logout</a>
-  </nav>
+  <h1>Blood Management System</h1>
+  <a href="logout.php" class="logout-btn">Logout</a>
 </header>
 
 <div class="container">
   <h2>Welcome, <?php echo $_SESSION['admin_username']; ?> 👋</h2>
   
-  <div class="card">Total Donors:5 </div>
-  <div class="card">Total Requests:6</div>
-  <div class="card">Available Units: 700</div>
-  <div class="card">Pending Approvals: pending </div>
+  <div class="stats-container">
+    <div class="card">Total Donors: <?php echo $totalDonors; ?></div>
+    <div class="card">Total Requesters: <?php echo $totalRequesters; ?></div>
+    <div class="card">Total Requests: <?php echo $totalRequests; ?></div>
+    <div class="card">Pending Requests: <?php echo $pendingRequests; ?></div>
+    <div class="card">Accepted: <?php echo $acceptedRequests; ?></div>
+    <div class="card">Fulfilled: <?php echo $fulfilledRequests; ?></div>
+  </div>
 <h1>Active requests</h1>
   <table>
 <tr><th>name</td>
@@ -49,14 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_req_id'])) {
 <th>action</th>
 </tr>
   <?php 
-      // Active requests: exclude any reqID that has isDonated = 1 in donors
+      // Active requests: requests with no donor yet
       $requestQuery = "SELECT request.reqID, blood.bloodType, users.FullName, request.reqDate, request.ml, users.phone 
-                     FROM request 
-                     JOIN users ON users.userID = request.userID 
-                     JOIN blood ON request.bloodID = blood.bloodID
-                     WHERE request.reqID NOT IN (
-                         SELECT reqID FROM donors WHERE isDonated = 1
-                     )";
+                       FROM request 
+                       JOIN users ON users.userID = request.userID 
+                       JOIN blood ON request.bloodID = blood.bloodID
+                       WHERE request.reqID NOT IN (SELECT reqID FROM donors)";
       $requestResult = mysqli_query($conn, $requestQuery);
       if (mysqli_num_rows($requestResult) == 0) { ?>
           <tr><td colspan="6" style="text-align:center;">No active requests.</td></tr>
@@ -79,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_req_id'])) {
       <?php } } ?>
   </table>
 
-  <h1>Fulfilled / Donated Requests</h1>
+  <h1>Fulfilled / Accepted Requests</h1>
   <table>
     <tr>
       <th>Requester</th>
@@ -88,17 +93,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_req_id'])) {
       <th>Quantity (ml)</th>
       <th>Donor</th>
       <th>Phone</th>
+      <th>Status</th>
     </tr>
     <?php
       $fulfilledQuery = "SELECT request.reqID, blood.bloodType, users.FullName AS requester, 
                                 request.reqDate, request.ml, users.phone,
-                                donor_user.FullName AS donorName
+                                donor_user.FullName AS donorName, donors.isDonated
                          FROM donors
                          JOIN request ON donors.reqID = request.reqID
                          JOIN blood ON request.bloodID = blood.bloodID
                          JOIN users ON users.userID = request.userID
-                         LEFT JOIN users AS donor_user ON donor_user.userID = donors.userID
-                         WHERE donors.isDonated = 1";
+                         LEFT JOIN users AS donor_user ON donor_user.userID = donors.userID";
       $fulfilledResult = mysqli_query($conn, $fulfilledQuery);
       if (mysqli_num_rows($fulfilledResult) == 0) { ?>
           <tr><td colspan="6" style="text-align:center;">No fulfilled requests yet.</td></tr>
@@ -111,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_req_id'])) {
               <td><?php echo htmlspecialchars($frow['ml']); ?></td>
               <td><?php echo htmlspecialchars($frow['donorName'] ?? 'N/A'); ?></td>
               <td><?php echo htmlspecialchars($frow['phone']); ?></td>
+              <td><?php echo $frow['isDonated'] ? '<span style="color:green;">Donated</span>' : '<span style="color:orange;">Accepted</span>'; ?></td>
           </tr>
       <?php } } ?>
   </table>

@@ -2,7 +2,7 @@
 let userPattern = /^([A-Z]|[a-z])[A-Za-z0-9_]{1,10}$/;
 const namePattern = /^[a-zA-Z]+[\s]+[a-zA-Z]+$/;
 const emailRegex = /^[a-zA-z]+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const phPattern = /^(97|98)\d{8}$/;
+const phPattern = /^[0-9]{9,10}$/;
 const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -51,7 +51,7 @@ phone.addEventListener("input", function (element) {
       errorPhone.innerText = "";
     } else {
       errorPhone.innerText =
-        "Phone number must start with 97 or 98 and be 10 digits long.";
+        "Phone number must be 9-10 digits.";
     }
   } else {
     errorPhone.innerText = "";

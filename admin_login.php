@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // ✅ Check password against stored hash
         if (password_verify($password, $admin['password'])) {
             $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_username'] = $admin['username'];
+            $_SESSION['admin_username'] = $admin['email'];
             $_SESSION['role'] = 'admin';
             header("Location: admin_dashboard.php");
             exit();

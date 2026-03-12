@@ -19,10 +19,13 @@ if (!$conn) {
         <h1>Blood Bank Management System</h1>
         <p>Saving Lives Through Blood Donation</p>
             <?php if ( isset($_SESSION['role']) && $_SESSION['role'] == 'requester'): ?>
-        <div class="notify" onclick="toggleDropdown()" title="Pending Donors">
+        <div class="notify" onclick="toggleDropdown()" title="Notifications">
             <img src="public/bell.svg" alt="Notification Bell" />
             <?php
-            $sql = "SELECT COUNT(donorID) AS total FROM donors WHERE isDonated = 'false'";
+            $userID = $_SESSION['userID'];
+            $sql = "SELECT COUNT(donorID) AS total FROM donors 
+                    JOIN request ON request.reqID = donors.reqID 
+                    WHERE request.userID = '$userID' AND donors.isDonated = 'false'";
             $res = mysqli_query($conn, $sql);
             $result = mysqli_fetch_assoc($res);
             if ($result["total"] > 0) {
@@ -33,8 +36,8 @@ if (!$conn) {
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Type</th>
+                            <th>Donor Name</th>
+                            <th>Blood Type</th>
                             <th>Phone</th>
                             <th>Date</th>
                         </tr>
@@ -47,7 +50,7 @@ if (!$conn) {
                             JOIN users ON users.userID = donors.userID
                             JOIN request ON request.reqID = donors.reqID
                             JOIN blood ON blood.bloodID = request.bloodID
-                            WHERE donors.isDonated = 'false'
+                            WHERE request.userID = '$userID' AND donors.isDonated = 'false'
                             ORDER BY request.reqDate DESC
                             LIMIT 10
                         ";
@@ -63,7 +66,7 @@ if (!$conn) {
                                       </tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='4' style='text-align:center;'>No pending donors</td></tr>";
+                            echo "<tr><td colspan='4' style='text-align:center;'>No new notifications</td></tr>";
                         }
                         ?>
                     </tbody>

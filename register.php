@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 
 // Connect to database
@@ -14,20 +16,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"]);
     $phone = trim($_POST["phone"]);
     $password = $_POST["password"];
-    $bloodID = $_POST["bloodgroup"];
+    $bloodID = !empty($_POST["bloodgroup"]) ? $_POST["bloodgroup"] : NULL;
     $role = $_POST["role"];
 
     // Hash password securely
     $passwordencrypt = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepared statement to prevent SQL injection
-    $sql = "INSERT INTO users (fullName, email, phone, password, bloodID,role)
-             VALUES ('$fullname', '$email', '$phone', '$passwordencrypt', '$bloodID','$role')";
+    $sql = "INSERT INTO users (fullName, email, phone, password, bloodID, role)
+             VALUES ('$fullname', '$email', '$phone', '$passwordencrypt', '$bloodID', '$role')";
     if (mysqli_query($conn, $sql)) {
         $_SESSION["fullname"] = $fullname;
         $_SESSION["role"] = $role;
         $_SESSION["userID"] = mysqli_insert_id($conn);
         header("location: index.php");
+        exit();
     } else {
         $register_message = "Error: " . mysqli_error($conn);
     }
